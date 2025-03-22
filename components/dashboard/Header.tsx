@@ -10,7 +10,7 @@ const Header = () => {
     <header className="md:border-[#000080] border-red-600 border-b-2 flex flex-col fixed z-50 inset-x-0">
         <div className='py-4 md:px-5 px-3 flex justify-between bg-white items-center w-full'>
             <Link href="/"  className='flex items-center'>
-                <Image src={'/logo1.png'} alt='' width={40} height={40} className='w-auto h-auto'/>
+                <Image src={'/logo2.jpeg'} alt='' width={40} height={40} className='w-auto h-auto'/>
                 <h1 className="text-2xl font-bold text-[#000080]">Al-istiqama</h1>
             </Link>
             <div className='font-bold text-sm hidden md:flex items-center gap-5'>

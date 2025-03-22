@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: "https://istiqamauni-1.onrender.com",
 });
 
 axiosInstance.interceptors.request.use(

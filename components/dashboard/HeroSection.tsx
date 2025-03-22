@@ -72,13 +72,13 @@ function HeroSection() {
     >
       {/* Background Image with Overlay */}
       <div className="absolute inset-0">
-        {/* <Image
-          src="/imgs.jpg"
+        <Image
+          src="/school.jpeg"
           alt="Hero Background"
           layout="fill"
           objectFit="cover"
           className="z-0"
-        /> */}
+        />
         <div className="absolute inset-0 bg-black bg-opacity-50"></div> Dark Overlay
       </div>
 
