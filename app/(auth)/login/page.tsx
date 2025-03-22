@@ -106,12 +106,12 @@ const Login = () => {
 
       // Save the token in localStorage
 
-      // localStorage.setItem("token", token);
+      localStorage.setItem("token", token);
 
       // Redirect to the appropriate dashboard
 
-      // router.push("/student-dashboard");
-      router.push('/admin-dashboard');
+      router.push("/student-dashboard");
+      // router.push('/admin-dashboard');
       setLoginLoading(false);
     } catch (err) {
       setError("Invalid email or password. Please try again.");

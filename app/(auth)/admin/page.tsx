@@ -106,7 +106,7 @@ const Admin = () => {
   
         // Save the token in localStorage
 
-        // localStorage.setItem('token', token);
+        localStorage.setItem('token', token);
   
         router.push('/admin-dashboard');
         // setAdminLoading(false);
