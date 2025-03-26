@@ -2,7 +2,22 @@ import React from 'react'
 import Link from 'next/link';
 import Image from 'next/image';
 
+
+export interface StudentData {
+  name: string;
+  regNumber: string;
+  department: string;
+  level: string;
+  email: string;
+  phone: string;
+  address: string;
+  feesPaid: boolean;
+  profilePic: string;
+}
+
 const page = () => {
+
+  
   return (
     <div className='bg-[#04031C] w-full h-screen flex justify-center items-center'>
         <div className='bg-white flex flex-col items-center text-center gap-5 p-5 rounded'>

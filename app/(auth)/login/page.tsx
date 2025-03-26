@@ -87,11 +87,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import axiosInstance from "@/utils/axiosInstance";
+import axios from 'axios';
 
 const Login = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [regNumber, setRegNumber] = useState("");
+  // const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loginLoading, setLoginLoading] = useState<boolean>(false);
 
@@ -101,17 +103,23 @@ const Login = () => {
     setError("");
 
     try {
-      const response = await axiosInstance.post("/login", { email, password });
+      // const response = await axios.post("http://localhost:3000/login", { email, regNumber });
+       const response = await axiosInstance.post("/login", { email, regNumber });
+      // const response = await axiosInstance.post("/login", { email, password });
       const { token } = response.data;
 
+      if (!token) {
+        console.error("No token found in localStorage!");
+        router.push("/login");
+        return;
+      }
+      
       // Save the token in localStorage
 
       localStorage.setItem("token", token);
 
       // Redirect to the appropriate dashboard
-
-      router.push("/student-dashboard");
-      // router.push('/admin-dashboard');
+      router.push('/student');
       setLoginLoading(false);
     } catch (err) {
       setError("Invalid email or password. Please try again.");
@@ -158,8 +166,8 @@ const Login = () => {
             <label className="block text-gray-200 font-medium mb-1">Password</label>
             <Input
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={regNumber}
+              onChange={(e) => setRegNumber(e.target.value)}
               className="w-full bg-white/20 border border-white/30 p-3 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
               placeholder="Enter your password"
               required
