@@ -47,7 +47,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     async function fetchStats() {
       try {
-        const res = await fetch('https://istiqamauni-1.onrender.comstats/');
+        const res = await fetch('https://istiqamauni-1.onrender.coms/stats/');
         const data = await res.json();
         setStats({
           students: data.totalStudents,
