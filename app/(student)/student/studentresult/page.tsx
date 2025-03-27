@@ -10,7 +10,9 @@ interface Result {
 
 export default function ViewResults() {
   const [regNumber, setRegNumber] = useState("");
-  const [results, setResults] = useState<Result[]>([]);
+  // const [results, setResults] = useState<Result[]>([]);
+  const [results, setResults] = useState<any[]>([]);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
