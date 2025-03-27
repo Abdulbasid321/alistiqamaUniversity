@@ -162,141 +162,88 @@
 import { useState, useEffect } from "react";
 
 interface Result {
-  fileName: string;
-  fileType: string;
-  fileData: string;
-  user: { username: string; regNumber: string };
-  classId: { name: string };
   course: string;
   grade: string;
-}
-
-interface Student {
-  _id: string;
-  username: string;
   regNumber: string;
 }
 
-interface Department {
-  _id: string;
-  name: string;
-}
-
-export default function UploadResult() {
-  const [file, setFile] = useState<File | null>(null);
-  const [classId, setClassId] = useState("");
-  const [studentId, setStudentId] = useState("");
+export default function StudentResults() {
+  const [regNumber, setRegNumber] = useState("");
   const [course, setCourse] = useState("");
   const [grade, setGrade] = useState("");
-  const [students, setStudents] = useState<Student[]>([]);
-  const [departments, setDepartments] = useState<Department[]>([]);
   const [results, setResults] = useState<Result[]>([]);
 
   useEffect(() => {
-    fetchStudents();
-    fetchDepartments();
-    if (studentId) fetchResults();
-  }, [studentId]);
-
-  const fetchStudents = async () => {
-    try {
-      const response = await fetch("https://istiqamauni-1.onrender.com/students");
-      const data = await response.json();
-      setStudents(Array.isArray(data) ? data : []);
-    } catch (error) {
-      console.error("Error fetching students:", error);
-    }
-  };
-
-  const fetchDepartments = async () => {
-    try {
-      const response = await fetch("https://istiqamauni-1.onrender.com/courses");
-      const data = await response.json();
-      setDepartments(Array.isArray(data) ? data : []);
-    } catch (error) {
-      console.error("Error fetching departments:", error);
-    }
-  };
-
+    console.log("Current regNumber:", regNumber);
+    if (regNumber) fetchResults();
+  }, [regNumber]);
+  
   const fetchResults = async () => {
     try {
-      const response = await fetch(`https://istiqamauni-1.onrender.com/getResults/${studentId}`);
+      const response = await fetch(`https://istiqamauni-1.onrender.com/getResults/${regNumber}`);
+  
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      }
+  
       const data = await response.json();
+  
+      // Ensure results is always an array
       setResults(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Error fetching results:", error);
+      setResults([]); // Ensure no crash if API fails
     }
   };
+  
+  
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFile(e.target.files[0]);
-    }
-  };
-
-  const handleUpload = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!file || !classId || !studentId || !course || !grade) return alert("All fields are required");
+    if (!regNumber || !course || !grade) return alert("All fields are required");
 
-    const formData = new FormData();
-    formData.append("result", file);
-    formData.append("user", studentId);
-    formData.append("classId", classId);
-    formData.append("course", course);
-    formData.append("grade", grade);
+    const newResult = { regNumber, course, grade };
 
     try {
-      const response = await fetch("https://istiqamauni-1.onrender.com/uploadResult", {
+      const response = await fetch("https://istiqamauni-1.onrender.com/addResult", {
         method: "POST",
-        body: formData,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newResult),
       });
 
-      if (!response.ok) throw new Error("Failed to upload result");
+      if (!response.ok) throw new Error("Failed to add result");
 
-      alert("Result uploaded successfully!");
-      setFile(null);
+      alert("Result added successfully!");
+      setCourse("");
+      setGrade("");
       fetchResults();
     } catch (error) {
-      console.error("Error uploading result:", error);
-      alert("Failed to upload result");
+      console.error("Error adding result:", error);
+      alert("Failed to add result");
     }
   };
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-gray-100 p-6">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg">
-        <h2 className="text-2xl font-bold text-center mb-6">Upload Student Result</h2>
-        <form onSubmit={handleUpload} className="grid gap-4">
-          <input type="file" onChange={handleFileChange} className="p-2 border rounded" required />
-          <select value={studentId} onChange={(e) => setStudentId(e.target.value)} className="p-2 border rounded" required>
-            <option value="">Select Student</option>
-            {students.map((student) => (
-              <option key={student._id} value={student._id}>{student.username} ({student.regNumber})</option>
-            ))}
-          </select>
-          <select value={classId} onChange={(e) => setClassId(e.target.value)} className="p-2 border rounded" required>
-            <option value="">Select Department</option>
-            {departments.map((dept) => (
-              <option key={dept._id} value={dept._id}>{dept.name}</option>
-            ))}
-          </select>
-          <input type="text" value={course} onChange={(e) => setCourse(e.target.value)} placeholder="Course" className="p-2 border rounded" required />
-          <input type="text" value={grade} onChange={(e) => setGrade(e.target.value)} placeholder="Grade" className="p-2 border rounded" required />
-          <button type="submit" className="p-2 bg-blue-600 text-white rounded hover:bg-blue-700">Upload Result</button>
+        <h2 className="text-2xl font-bold text-center mb-6">Add Student Result</h2>
+        <form onSubmit={handleSubmit} className="grid gap-4">
+          <input type="text" placeholder="Student Reg Number" value={regNumber} onChange={(e) => setRegNumber(e.target.value)} className="p-2 border rounded" required />
+          <input type="text" placeholder="Course Name" value={course} onChange={(e) => setCourse(e.target.value)} className="p-2 border rounded" required />
+          <input type="text" placeholder="Grade" value={grade} onChange={(e) => setGrade(e.target.value)} className="p-2 border rounded" required />
+          <button type="submit" className="p-2 bg-blue-600 text-white rounded hover:bg-blue-700">Add Result</button>
         </form>
       </div>
 
       <div className="mt-6 bg-white p-6 rounded-lg shadow-md w-full max-w-lg">
-        <h3 className="text-xl font-semibold">Uploaded Results</h3>
+        <h3 className="text-xl font-semibold">Student Results</h3>
         <ul className="mt-4">
           {results.length === 0 ? (
             <p className="text-gray-500">No results found.</p>
           ) : (
             results.map((result, index) => (
               <li key={index} className="p-2 border-b">
-                <span className="font-bold">{result.fileName}</span> -
-                <span className="ml-2">({result.classId.name} - {result.user.username} - {result.course} - Grade: {result.grade})</span>
-                <a href={`data:${result.fileType};base64,${result.fileData}`} download={result.fileName} className="text-blue-600 ml-2">Download</a>
+                <span className="font-bold">{result.course}:</span> {result.grade} ({result.regNumber})
               </li>
             ))
           )}
@@ -305,3 +252,154 @@ export default function UploadResult() {
     </div>
   );
 }
+
+
+
+// "use client";
+
+// import { useState, useEffect } from "react";
+
+// interface Result {
+//   fileName: string;
+//   fileType: string;
+//   fileData: string;
+//   user: { username: string; regNumber: string };
+//   classId: { name: string };
+//   course: string;
+//   grade: string;
+// }
+
+// interface Student {
+//   _id: string;
+//   username: string;
+//   regNumber: string;
+// }
+
+// interface Department {
+//   _id: string;
+//   name: string;
+// }
+
+// export default function UploadResult() {
+//   const [file, setFile] = useState<File | null>(null);
+//   const [classId, setClassId] = useState("");
+//   const [studentId, setStudentId] = useState("");
+//   const [course, setCourse] = useState("");
+//   const [grade, setGrade] = useState("");
+//   const [students, setStudents] = useState<Student[]>([]);
+//   const [departments, setDepartments] = useState<Department[]>([]);
+//   const [results, setResults] = useState<Result[]>([]);
+
+//   useEffect(() => {
+//     fetchStudents();
+//     fetchDepartments();
+//     if (studentId) fetchResults();
+//   }, [studentId]);
+
+//   const fetchStudents = async () => {
+//     try {
+//       const response = await fetch("https://istiqamauni-1.onrender.com/students");
+//       const data = await response.json();
+//       setStudents(Array.isArray(data) ? data : []);
+//     } catch (error) {
+//       console.error("Error fetching students:", error);
+//     }
+//   };
+
+//   const fetchDepartments = async () => {
+//     try {
+//       const response = await fetch("https://istiqamauni-1.onrender.com/courses");
+//       const data = await response.json();
+//       setDepartments(Array.isArray(data) ? data : []);
+//     } catch (error) {
+//       console.error("Error fetching departments:", error);
+//     }
+//   };
+
+//   const fetchResults = async () => {
+//     try {
+//       const response = await fetch(`https://istiqamauni-1.onrender.com/getResults/${studentId}`);
+//       const data = await response.json();
+//       setResults(Array.isArray(data) ? data : []);
+//     } catch (error) {
+//       console.error("Error fetching results:", error);
+//     }
+//   };
+
+//   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+//     if (e.target.files) {
+//       setFile(e.target.files[0]);
+//     }
+//   };
+
+//   const handleUpload = async (e: React.FormEvent) => {
+//     e.preventDefault();
+//     if (!file || !classId || !studentId || !course || !grade) return alert("All fields are required");
+
+//     const formData = new FormData();
+//     formData.append("result", file);
+//     formData.append("user", studentId);
+//     formData.append("classId", classId);
+//     formData.append("course", course);
+//     formData.append("grade", grade);
+
+//     try {
+//       const response = await fetch("https://istiqamauni-1.onrender.com/uploadResult", {
+//         method: "POST",
+//         body: formData,
+//       });
+
+//       if (!response.ok) throw new Error("Failed to upload result");
+
+//       alert("Result uploaded successfully!");
+//       setFile(null);
+//       fetchResults();
+//     } catch (error) {
+//       console.error("Error uploading result:", error);
+//       alert("Failed to upload result");
+//     }
+//   };
+
+//   return (
+//     <div className="min-h-screen flex flex-col items-center bg-gray-100 p-6">
+//       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg">
+//         <h2 className="text-2xl font-bold text-center mb-6">Upload Student Result</h2>
+//         <form onSubmit={handleUpload} className="grid gap-4">
+//           <input type="file" onChange={handleFileChange} className="p-2 border rounded" required />
+//           <select value={studentId} onChange={(e) => setStudentId(e.target.value)} className="p-2 border rounded" required>
+//             <option value="">Select Student</option>
+//             {students.map((student) => (
+//               <option key={student._id} value={student._id}>{student.username} ({student.regNumber})</option>
+//             ))}
+//           </select>
+//           <select value={classId} onChange={(e) => setClassId(e.target.value)} className="p-2 border rounded" required>
+//             <option value="">Select Department</option>
+//             {departments.map((dept) => (
+//               <option key={dept._id} value={dept._id}>{dept.name}</option>
+//             ))}
+//           </select>
+//           <input type="text" value={course} onChange={(e) => setCourse(e.target.value)} placeholder="Course" className="p-2 border rounded" required />
+//           <input type="text" value={grade} onChange={(e) => setGrade(e.target.value)} placeholder="Grade" className="p-2 border rounded" required />
+//           <button type="submit" className="p-2 bg-blue-600 text-white rounded hover:bg-blue-700">Upload Result</button>
+//         </form>
+//       </div>
+
+//       <div className="mt-6 bg-white p-6 rounded-lg shadow-md w-full max-w-lg">
+//         <h3 className="text-xl font-semibold">Uploaded Results</h3>
+//         <ul className="mt-4">
+//           {results.length === 0 ? (
+//             <p className="text-gray-500">No results found.</p>
+//           ) : (
+//             results.map((result, index) => (
+//               <li key={index} className="p-2 border-b">
+//                 <span className="font-bold">{result.fileName}</span> -
+//                 <span className="ml-2">({result.classId.name} - {result.user.username} - {result.course} - Grade: {result.grade})</span>
+//                 <a href={`data:${result.fileType};base64,${result.fileData}`} download={result.fileName} className="text-blue-600 ml-2">Download</a>
+//               </li>
+//             ))
+//           )}
+//         </ul>
+//       </div>
+//     </div>
+//   );
+// }
