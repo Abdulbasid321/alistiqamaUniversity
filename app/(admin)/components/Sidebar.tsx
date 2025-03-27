@@ -117,7 +117,7 @@
 
 
 import React from "react";
-import { BookAIcon, GraduationCap, LayoutDashboard, UserPenIcon } from "lucide-react";
+import { BookAIcon, GraduationCap, LayoutDashboard, LogOutIcon, UserPenIcon } from "lucide-react";
 import Link from "next/link";
 
 const Sidebar = ({ closeSidebar }: { closeSidebar: () => void }) => {
@@ -126,6 +126,7 @@ const Sidebar = ({ closeSidebar }: { closeSidebar: () => void }) => {
     { id: 2, name: "Dashboard", path: "/teacher/admindashboard", icon: UserPenIcon },
     { id: 3, name: "Department", path: "/teacher/addcourses", icon: GraduationCap },
     { id: 4, name: "Result", path: "/teacher/result", icon: BookAIcon },
+    { id: 5, name: "Logout", path: "/", icon: LogOutIcon },
   ];
 
   return (

@@ -14,7 +14,6 @@
 // export default Header
 
 import { Bell, Menu } from "lucide-react";
-import Link from "next/link";
 
 export default function Header({ toggleSidebar }: { toggleSidebar: () => void }) {
   return (
@@ -26,8 +25,7 @@ export default function Header({ toggleSidebar }: { toggleSidebar: () => void })
       <h1 className="text-xl font-bold">Dashboard</h1>
 
       <div className="">
-        {/* <div><Bell className='h-6 w-6 hover:text-green-700 cursor-pointer items-start' /></div> */}
-        <div><Link href="/"><h3 className="h-6 w-6 hover:text-green-700 cursor-pointer items-start">Logout</h3></Link></div>
+        <div><Bell className='h-6 w-6 hover:text-green-700 cursor-pointer items-start' /></div>
       </div>
 
     </header>
