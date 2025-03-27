@@ -188,7 +188,9 @@ import { motion } from "framer-motion";
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({ students: 0, departments: 0 });
-  const [students, setStudents] = useState([]);
+  // const [students, setStudents] = useState([]);
+  const [students, setStudents] = useState<{ id: string; name: string; department: string }[]>([]);
+
 
   useEffect(() => {
     fetch("https://istiqamauni-1.onrender.com/stats/")
