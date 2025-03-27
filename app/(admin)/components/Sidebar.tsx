@@ -124,7 +124,7 @@ const Sidebar = ({ closeSidebar }: { closeSidebar: () => void }) => {
   const lists = [
     { id: 1, name: "Add Student", path: "/teacher/addstudent", icon: LayoutDashboard },
     { id: 2, name: "Dashboard", path: "/teacher/admindashboard", icon: UserPenIcon },
-    { id: 3, name: "Courses", path: "/teacher/addcourses", icon: GraduationCap },
+    { id: 3, name: "Department", path: "/teacher/addcourses", icon: GraduationCap },
     { id: 4, name: "Result", path: "/teacher/result", icon: BookAIcon },
   ];
 

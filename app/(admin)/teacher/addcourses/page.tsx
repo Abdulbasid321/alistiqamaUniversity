@@ -90,7 +90,7 @@ export default function CreateDepartment() {
       </div>
 
       <div className="mt-6 bg-white p-6 rounded-lg shadow-md text-center w-full max-w-lg">
-        <h3 className="text-xl font-semibold">Total Courses</h3>
+        <h3 className="text-xl font-semibold">Total Department</h3>
         <p className="text-3xl font-bold text-blue-600">{totalCourses}</p>
       </div>
     </div>
