@@ -116,17 +116,29 @@
 // // export default Sidebar;
 
 
-import React from "react";
+
 import { BookAIcon, GraduationCap, LayoutDashboard, LogOutIcon, UserPenIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
+import router from "next/router";
 import Link from "next/link";
 
 const Sidebar = ({ closeSidebar }: { closeSidebar: () => void }) => {
+   const router = useRouter();
+  
+    const handleLogout = () => {
+      // 🔹 Clear authentication data (JWT, session, etc.)
+      localStorage.removeItem("jwtToken"); // If storing JWT in localStorage
+      sessionStorage.removeItem("jwtToken"); // If using sessionStorage
+  
+      // 🔹 Redirect user to login page
+      router.push("/login");
+    };
+  
   const lists = [
     { id: 1, name: "Profile", path: "/student/profile", icon: LayoutDashboard },
     { id: 2, name: "Dashboard", path: "/student/dashboard", icon: UserPenIcon },
     { id: 3, name: "Courses", path: "/student/courses", icon: GraduationCap },
     { id: 4, name: "Result", path: "/student/studentresult", icon: BookAIcon },
-    { id: 5, name: "Logout", path: "/", icon: LogOutIcon },
   ];
 
   return (
@@ -142,6 +154,15 @@ const Sidebar = ({ closeSidebar }: { closeSidebar: () => void }) => {
             </h2>
           </Link>
         ))}
+
+         {/* 🔹 Logout Button */}
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-3 text-md p-3 rounded-xl w-full mt-4 bg-red-500 text-white hover:bg-red-700"
+                >
+                  <LogOutIcon />
+                  Logout
+                </button>
       </div>
     </div>
   );
