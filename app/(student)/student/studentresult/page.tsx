@@ -10,30 +10,58 @@ interface Result {
 
 export default function ViewResults() {
   const [regNumber, setRegNumber] = useState("");
-  // const [results, setResults] = useState<Result[]>([]);
-  const [results, setResults] = useState<any[]>([]);
+  const [results, setResults] = useState<Result[]>([]);
+  // const [results, setResults] = useState<any[]>([]);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
   const fetchResults = async () => {
     if (!regNumber) return alert("Please enter your registration number");
+  
     setLoading(true);
     setError("");
-
+  
     try {
       const response = await fetch(`https://istiqamauni-1.onrender.com/getResults/${regNumber}`);
-      // const response = await fetch(`https://istiqamauni-1.onrender.com/getResults/${regNumber}`);
-      if (!response.ok) throw new Error("Failed to fetch results");
       
-      const data: Result[] = await response.json();
-      setResults(data);
+      if (!response.ok) throw new Error("Failed to fetch results");
+  
+      const data = await response.json();
+      
+      console.log("API Response:", data); // Debugging: Log the API response
+  
+      if (!Array.isArray(data.results)) {
+        throw new Error("Unexpected response format");
+      }
+  
+      setResults(data.results); // Assuming `data.results` holds the array of results
     } catch (error) {
+      console.error("Error fetching results:", error);
       setError("Error fetching results. Please try again.");
     } finally {
       setLoading(false);
     }
   };
+  
+  
+  // const fetchResults = async () => {
+  //   if (!regNumber) return alert("Please enter your registration number");
+  //   setLoading(true);
+  //   setError("");
+
+  //   try {
+  //     const response = await fetch(`https://istiqamauni-1.onrender.com/getResults/${regNumber}`);
+  //     // const response = await fetch(`https://istiqamauni-1.onrender.com/getResults/${regNumber}`);
+  //     if (!response.ok) throw new Error("Failed to fetch results");
+      
+  //     const data: Result[] = await response.json();
+  //     setResults(data);
+  //   } catch (error) {
+  //     setError("Error fetching results. Please try again.");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-gray-100 p-6">
@@ -61,11 +89,18 @@ export default function ViewResults() {
           <p className="text-gray-500">No results found.</p>
         ) : (
           <ul className="mt-4">
-            {results.map((result, index) => (
+            {/* {results.map((result, index) => (
               <li key={index} className="p-2 border-b">
                 <span className="font-bold">{result.course}</span>: {result.grade}
               </li>
-            ))}
+            ))} */}
+            {Array.isArray(results) &&
+  results.map((result, index) => (
+    <li key={index} className="p-2 border-b">
+      <span className="font-bold">{result.course}</span>: {result.grade}
+    </li>
+  ))}
+
           </ul>
         )}
       </div>

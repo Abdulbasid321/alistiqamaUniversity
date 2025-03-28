@@ -86,65 +86,6 @@ export default function AdminDashboard() {
     }
   };
 
-  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  
-  //   console.log("🔍 Student Data Before Submission:", studentData);
-  
-  //   // Ensure all required fields are filled
-  //   if (
-  //     !studentData.name ||
-  //     !studentData.regNumber ||
-  //     !studentData.department ||
-  //     !studentData.level ||
-  //     !studentData.email ||
-  //     !studentData.phone ||
-  //     !studentData.address
-  //   ) {
-  //     console.error("⚠️ Missing Required Fields");
-  //     alert("Please fill in all required fields before submitting.");
-  //     return;
-  //   }
-  
-  //   try {
-  //     const response = await fetch("http://localhost:3000/students", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(studentData), // Ensure it's properly converted
-  //     });
-  
-  //     const data = await response.json();
-      
-  //     if (!response.ok) {
-  //       console.error("Backend Error:", data);
-  //       throw new Error(data.error || "Failed to submit form");
-  //     }
-  
-  //     console.log("✅ Student added successfully:", data);
-  //     alert("Student added successfully!");
-  //     setStudentData({
-  //       name: '',
-  //       regNumber: '',
-  //       department: '',
-  //       level: '',
-  //       email: '',
-  //       phone: '',
-  //       address: '',
-  //       feesPaid: false,
-  //       profilePic: null,
-  //     });
-  
-  //        // Reset the file input manually
-  //   const fileInput = document.querySelector<HTMLInputElement>('input[type="file"]');
-  //   if (fileInput) fileInput.value = "";
-    
-  //   } catch (error) {
-  //     console.error("Error submitting form:", error);
-  //     alert("Failed to submit student data");
-  //   }
-  // };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
