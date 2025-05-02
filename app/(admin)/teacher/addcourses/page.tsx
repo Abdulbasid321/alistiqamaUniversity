@@ -85,7 +85,7 @@ export default function CreateDepartment() {
             <option value="300">300</option>
             <option value="400">400</option>
           </select>
-          <button type="submit" className="p-2 bg-blue-600 text-white rounded hover:bg-blue-700">Create Department</button>
+          <button type="submit" className="p-2 bg-blue-600 text-white rounded hover:bg-blue-700">Create Course</button>
         </form>
       </div>
 
