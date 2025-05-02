@@ -103,6 +103,7 @@ const StudentProfile = () => {
   
     const fetchStudentDetails = async () => {
       try {
+        // const response = await fetch(`http://localhost:5000/students/${userId}`);
         const response = await fetch(`https://istiqamauni-1.onrender.com/students/${userId}`);
         if (!response.ok) throw new Error("Failed to fetch student details");
 

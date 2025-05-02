@@ -108,6 +108,7 @@ export default function AdminDashboard() {
     }
   
     try {
+      // const response = await fetch("http://localhost:5000/students", {
       const response = await fetch("https://istiqamauni-1.onrender.com/students", {
         method: "POST",
         headers: {

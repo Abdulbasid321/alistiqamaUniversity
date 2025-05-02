@@ -66,7 +66,7 @@ export default function CreateDepartment() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg">
-        <h2 className="text-2xl font-bold text-center mb-6">Create Department</h2>
+        <h2 className="text-2xl font-bold text-center mb-6">Create Course</h2>
         <form onSubmit={handleSubmit} className="grid gap-4">
           <input type="text" name="name" placeholder="Department Name" value={departmentData.name} onChange={handleChange} className="p-2 border rounded" required />
           <input type="text" name="code" placeholder="Course Code" value={departmentData.code} onChange={handleChange} className="p-2 border rounded" required />

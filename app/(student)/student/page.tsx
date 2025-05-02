@@ -13,7 +13,7 @@ const StudentDashboard = () => {
 
     if (!token) {
       console.log("No token found! Redirecting to login...");
-      router.replace("/login"); // Use replace to prevent back navigation
+      // router.replace("/login"); // Use replace to prevent back navigation
     } else {
       setIsAuthenticated(true);
     }
