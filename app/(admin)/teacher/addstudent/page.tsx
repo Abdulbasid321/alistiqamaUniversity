@@ -161,13 +161,13 @@ export default function AdminDashboard() {
           <p className="text-3xl font-bold text-green-600">{stats.students}</p>
         </div>
         <div className="bg-white p-6 rounded-lg shadow-md text-center">
-          <h2 className="text-xl font-semibold">Total Departments</h2>
+          <h2 className="text-xl font-semibold">Total Courses</h2>
           <p className="text-3xl font-bold text-blue-600">{stats.departments}</p>
         </div>
-        <div className="bg-white p-6 rounded-lg shadow-md text-center">
+        {/* <div className="bg-white p-6 rounded-lg shadow-md text-center">
           <h2 className="text-xl font-semibold">Total Courses</h2>
           <p className="text-3xl font-bold text-purple-600">{stats.courses}</p>
-        </div>
+        </div> */}
       </div>
 
       {/* Student Registration Form */}

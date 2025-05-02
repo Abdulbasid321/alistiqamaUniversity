@@ -88,7 +88,7 @@ export default function CreateDepartment() {
           <button type="submit" className="p-2 bg-blue-600 text-white rounded hover:bg-blue-700">Create Course</button>
         </form>
       </div>
-
+      
       <div className="mt-6 bg-white p-6 rounded-lg shadow-md text-center w-full max-w-lg">
         <h3 className="text-xl font-semibold">Total Department</h3>
         <p className="text-3xl font-bold text-blue-600">{totalCourses}</p>
