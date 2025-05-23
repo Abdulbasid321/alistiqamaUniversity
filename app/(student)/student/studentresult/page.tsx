@@ -1,195 +1,290 @@
-// "use client";
-
-// import { useState } from "react";
+// "use client"
+// import React, { useEffect, useState } from "react";
 
 // interface Result {
-//   course: string;
-//   grade: string;
-//   regNumber: string;
+//   createdAt: string;
+//   _id: string;
+//   fileName: string;
+//   fileUrl: string;
+//   fileType: string;
+//   uploadedAt: string;
 // }
 
-// export default function ViewResults() {
-//   const [regNumber, setRegNumber] = useState("");
+// const StudentResultsPage = () => {
 //   const [results, setResults] = useState<Result[]>([]);
-//   // const [results, setResults] = useState<any[]>([]);
+//   const [loading, setLoading] = useState(true);
 
-//   const [loading, setLoading] = useState(false);
-//   const [error, setError] = useState("");
-//   const fetchResults = async () => {
-//     if (!regNumber) return alert("Please enter your registration number");
-  
-//     setLoading(true);
-//     setError("");
-  
+//   const fetchResults = async (regNumber: string) => {
 //     try {
-//       const response = await fetch(`https://istiqamauni-1.onrender.com/getResults/${regNumber}`);
-      
-//       if (!response.ok) throw new Error("Failed to fetch results");
-  
-//       const data = await response.json();
-      
-//       console.log("API Response:", data); // Debugging: Log the API response
-  
-//       if (!Array.isArray(data.results)) {
-//         throw new Error("Unexpected response format");
-//       }
-  
-//       setResults(data.results); // Assuming `data.results` holds the array of results
-//     } catch (error) {
-//       console.error("Error fetching results:", error);
-//       setError("Error fetching results. Please try again.");
+//           const sanitizedRegNumber = regNumber.replace(/[^a-zA-Z0-9]/g, "");
+//       const res = await fetch(`http://localhost:5000/student/results/${sanitizedRegNumber}`, {
+//         headers: {
+//           Authorization: `Bearer ${localStorage.getItem("token")}`,
+//         },
+//       });
+
+//       const data = await res.json();
+//       setResults(data ? [data] : []);
+//     } catch (err) {
+//       console.error("Failed to fetch results", err);
 //     } finally {
 //       setLoading(false);
 //     }
 //   };
 
-//   return (
-//     <div className="min-h-screen flex flex-col items-center bg-gray-100 p-6">
-//       <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
-//         <h2 className="text-2xl font-bold text-center mb-4">View Your Results</h2>
-//         <input
-//           type="text"
-//           placeholder="Enter Registration Number"
-//           value={regNumber}
-//           onChange={(e) => setRegNumber(e.target.value)}
-//           className="p-2 border rounded w-full mb-4"
-//         />
-//         <button
-//           onClick={fetchResults}
-//           className="p-2 bg-blue-600 text-white rounded w-full hover:bg-blue-700"
-//         >
-//           {loading ? "Loading..." : "View Results"}
-//         </button>
-//         {error && <p className="text-red-500 text-center mt-2">{error}</p>}
-//       </div>
-      
-//       <div className="mt-6 bg-white p-6 rounded-lg shadow-md w-full max-w-md">
-//         <h3 className="text-xl font-semibold">Results</h3>
-//         {results.length === 0 ? (
-//           <p className="text-gray-500">No results found.</p>
-//         ) : (
-//           <ul className="mt-4">
-//             {/* {results.map((result, index) => (
-//               <li key={index} className="p-2 border-b">
-//                 <span className="font-bold">{result.course}</span>: {result.grade}
-//               </li>
-//             ))} */}
-//             {Array.isArray(results) &&
-//   results.map((result, index) => (
-//     <li key={index} className="p-2 border-b">
-//       <span className="font-bold">{result.course}</span>: {result.grade}
-//     </li>
-//   ))}
+//   useEffect(() => {
+//     const regNumber = localStorage.getItem("regNumber");
+    
+//     if (regNumber) {
+//       fetchResults(regNumber);
+//     } else {
+//       console.error("No registration number found in localStorage.");
+//       setLoading(false);
+//     }
+//   }, []);
 
-//           </ul>
-//         )}
-//       </div>
+//   if (loading) return <p className="text-center mt-10">Loading results...</p>;
+
+//   return (
+//     <div className="max-w-4xl mx-auto px-4 py-10">
+//   <h1 className="text-4xl font-bold text-center text-gray-800 mb-10">
+//     📄 My Results
+//   </h1>
+
+//   {results.length === 0 ? (
+//     <p className="text-center text-gray-500 text-lg">
+//       No results available.
+//     </p>
+//   ) : (
+//     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+//       {results.map((result) => (
+//         <div
+//           key={result._id}
+//           className="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg transition-shadow p-6 flex flex-col justify-between"
+//         >
+//           <div>
+//             <h3 className="text-xl font-semibold text-gray-800 truncate">
+//               {result.fileName}
+//             </h3>
+//             <p className="text-sm text-gray-500 mt-1">
+//               Uploaded on:{" "}
+//               {new Date(result.createdAt || result.uploadedAt).toLocaleDateString()}
+//             </p>
+//           </div>
+//           <a
+//             href={result.fileUrl}
+//             target="_blank"
+//             rel="noopener noreferrer"
+//             className="mt-6 inline-block text-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+//           >
+//             View Result
+//           </a>
+//         </div>
+//       ))}
 //     </div>
+//   )}
+// </div>
+
 //   );
-// }
+// };
+
+// export default StudentResultsPage;
+
 
 "use client";
+import React, { useEffect, useState } from "react";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import axios from "axios";
+interface Result {
+  createdAt: string;
+  _id: string;
+  fileName: string;
+  fileUrl: string;
+  fileType: string;
+  uploadedAt?: string;
+}
 
-const StudentDashboard = () => {
-  const router = useRouter();
+const StudentResultsPage = () => {
+  const [results, setResults] = useState<Result[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const [regNo, setRegNo] = useState("");
-  const [results, setResults] = useState([]);
-  const [fetching, setFetching] = useState(false);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      console.log("No token found! Redirecting to login...");
-      router.replace("/login");
-    } else {
-      setIsAuthenticated(true);
-    }
-
-    setLoading(false);
-  }, []);
-
-  const handleFetchResults = async () => {
-    setFetching(true);
-    setError("");
-    setResults([]);
-
+  const fetchResults = async (regNumber: string) => {
     try {
-      const encodedRegNo = encodeURIComponent(regNo);
-      const res = await axios.get(
-        // `http://localhost:5000/getResults/CSE191`
-        `https://istiqamauni-1.onrender.com/getResults/${encodedRegNo}`
-        // `http://localhost:5000/getResults/${encodedRegNo}`
+      const sanitizedRegNumber = regNumber.replace(/[^a-zA-Z0-9]/g, "");
+      const res = await fetch(
+        `https://istiqamauni-1.onrender.com/student/results/${sanitizedRegNumber}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
       );
-      setResults(res.data.results);
-    } catch (err: any) {
-      setError(err?.response?.data?.error || "An error occurred.");
+
+      const data = await res.json();
+
+      // Ensure data is an array
+      if (Array.isArray(data)) {
+        setResults(data);
+      } else {
+        setResults([]);
+      }
+    } catch (err) {
+      console.error("Failed to fetch results", err);
+      setResults([]);
     } finally {
-      setFetching(false);
+      setLoading(false);
     }
   };
 
-  if (loading || !isAuthenticated) return null;
+  useEffect(() => {
+    const regNumber = localStorage.getItem("regNumber");
+
+    if (regNumber) {
+      fetchResults(regNumber);
+    } else {
+      console.error("No registration number found in localStorage.");
+      setLoading(false);
+    }
+  }, []);
+
+  if (loading) return <p className="text-center mt-10">Loading results...</p>;
 
   return (
-    <div className="min-h-screen px-4 py-10 bg-gray-100 flex flex-col items-center">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-xl">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">
-          Welcome to Your Dashboard
-        </h2>
+    <div className="max-w-5xl mx-auto px-4 py-10">
+      <h1 className="text-4xl font-bold text-center text-gray-800 mb-10">
+        📄 My Results
+      </h1>
 
-        <div className="space-y-4">
-          <input
-            type="text"
-            value={regNo}
-            onChange={(e) => setRegNo(e.target.value)}
-            placeholder="Enter your Registration Number"
-            className="w-full px-4 py-2 border rounded"
-          />
-
-          <button
-            onClick={handleFetchResults}
-            disabled={fetching || !regNo}
-            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-          >
-            {fetching ? "Fetching..." : "View My Results"}
-          </button>
-
-          {error && <p className="text-red-600">{error}</p>}
-        </div>
-      </div>
-
-      {results.length > 0 && (
-        <div className="mt-8 w-full max-w-3xl bg-white p-6 rounded shadow">
-          <h3 className="text-xl font-semibold mb-4">Your Uploaded Results</h3>
-          <ul className="space-y-4">
-            {results.map((result: any) => (
-              <li key={result._id} className="border-b pb-2">
-                <p className="text-gray-800 font-medium">File: {result.fileName}</p>
-                {/* <p className="text-gray-600 text-sm">Class: {result.classId?.name || "N/A"}</p> */}
+      {results.length === 0 ? (
+        <p className="text-center text-gray-500 text-lg">
+          No results available.
+        </p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {results.map((result) => (
+            <div
+              key={result._id}
+              className="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow p-6 flex flex-col justify-between"
+            >
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800 truncate">
+                  {result.fileName}
+                </h3>
+                <p className="text-sm text-gray-500 mt-1">
+                  Uploaded on:{" "}
+                  {new Date(result.createdAt || result.uploadedAt).toLocaleDateString()}
+                </p>
+              </div>
               <a
-  href={result.fileUrl}
-  className="text-blue-500 hover:underline"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  Download Result
-</a>
-              </li>
-            ))}
-          </ul>
+                href={result.fileUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 inline-block text-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+              >
+                View Result
+              </a>
+            </div>
+          ))}
         </div>
       )}
     </div>
   );
 };
 
-export default StudentDashboard;
+export default StudentResultsPage;
+
+
+// "use client"
+// import React, { useEffect, useState } from "react";
+
+// interface Result {
+//   _id: string;
+//   fileName: string;
+//   fileUrl: string;
+//   fileType: string;
+//   uploadedAt: string;
+// }
+
+// const StudentResultsPage = () => {
+//   const [results, setResults] = useState<Result[]>([]);
+//   const [loading, setLoading] = useState(true);
+
+//   const fetchResults = async () => {
+//     try {
+//       const res = await fetch("http://localhost:5000/student/results", {
+//         headers: {
+//           Authorization: `Bearer ${localStorage.getItem("token")}`,
+//         },
+//       });
+
+//       const data = await res.json();
+//       setResults(data.results || []);
+//     } catch (err) {
+//       console.error("Failed to fetch results", err);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchResults();
+//   }, []);
+
+//   return (
+//     <div className="min-h-screen bg-gray-50">
+//       {/* Header */}
+//       <header className="bg-green-600 text-white py-6 shadow-md">
+//         <div className="max-w-5xl mx-auto px-4">
+//           <h1 className="text-3xl font-bold">Welcome, Student 👋</h1>
+//           <p className="text-sm text-green-100 mt-1">Here are your uploaded results.</p>
+//         </div>
+//       </header>
+
+//       {/* Results Section */}
+//       <main className="max-w-5xl mx-auto p-4">
+//         {loading ? (
+//           <p className="text-gray-500 mt-10 text-center">Loading your results...</p>
+//         ) : results.length === 0 ? (
+//           <div className="text-center mt-10">
+//             <p className="text-xl text-gray-600">No results uploaded yet 😢</p>
+//           </div>
+//         ) : (
+//           <div className="grid gap-6 mt-8 sm:grid-cols-2 md:grid-cols-3">
+//             {results.map((result) => (
+//               <div
+//                 key={result._id}
+//                 className="bg-white p-4 rounded-xl shadow-md hover:shadow-lg transition"
+//               >
+//                 <h2 className="font-semibold text-lg truncate">{result.fileName}</h2>
+//                 <p className="text-sm text-gray-500 mt-1">
+//                   Type: {result.fileType.split("/")[1]?.toUpperCase()}
+//                 </p>
+//                 <p className="text-xs text-gray-400 mt-1">
+//                   Uploaded: {new Date(result.uploadedAt).toLocaleDateString()}
+//                 </p>
+//                 <div className="flex justify-between mt-4">
+//                   <a
+//                     href={result.fileUrl}
+//                     target="_blank"
+//                     rel="noopener noreferrer"
+//                     className="text-sm text-green-600 hover:underline"
+//                   >
+//                     View
+//                   </a>
+//                   <a
+//                     href={result.fileUrl}
+//                     download={result.fileName}
+//                     className="text-sm text-blue-600 hover:underline"
+//                   >
+//                     Download
+//                   </a>
+//                 </div>
+//               </div>
+//             ))}
+//           </div>
+//         )}
+//       </main>
+//     </div>
+//   );
+// };
+
+// export default StudentResultsPage;

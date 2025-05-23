@@ -55,7 +55,8 @@ const Sidebar = ({ closeSidebar }: { closeSidebar: () => void }) => {
     { id: 1, name: "Add Student", path: "/teacher/addstudent", icon: LayoutDashboard },
     { id: 2, name: "Dashboard", path: "/teacher/admindashboard", icon: UserPenIcon },
     { id: 3, name: "Course", path: "/teacher/addcourses", icon: GraduationCap },
-    { id: 4, name: "Result", path: "/teacher/result", icon: BookAIcon },
+    { id: 4, name: "Time-Table", path: "/teacher/timetable", icon: BookAIcon },
+    { id: 5, name: "Result", path: "/teacher/result", icon: BookAIcon },
   ];
 
   return (

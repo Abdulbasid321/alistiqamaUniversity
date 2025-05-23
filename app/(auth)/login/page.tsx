@@ -97,35 +97,72 @@ const Login = () => {
   const [error, setError] = useState("");
   const [loginLoading, setLoginLoading] = useState<boolean>(false);
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoginLoading(true);
-    setError("");
+  // const handleLogin = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   setLoginLoading(true);
+  //   setError("");
 
-    try {
-      // const response = await axios.post("http://localhost:5000/login", { email, regNumber });
-       const response = await axiosInstance.post("/login", { email, regNumber });
-      // const response = await axiosInstance.post("/login", { email, password });
-      const { token } = response.data;
+  //   try {
+  //     // const response = await axios.post("http://localhost:5000/login", { email, regNumber });
+  //      const response = await axiosInstance.post("/login", { email, regNumber });
+  //     // const response = await axiosInstance.post("/login", { email, password });
+  //     const { token } = response.data;
 
-      if (!token) {
-        console.error("No token found in localStorage!");
-        router.push("/login");
-        return;
-      }
+  //     if (!token) {
+  //       console.error("No token found in localStorage!");
+  //       router.push("/login");
+  //       return;
+  //     }
       
-      // Save the token in localStorage
+  //     // Save the token in localStorage
 
-      localStorage.setItem("token", token);
+  //     localStorage.setItem("token", token);
 
-      // Redirect to the appropriate dashboard
-      router.push('/student');
+  //     // Redirect to the appropriate dashboard
+  //     router.push('/student');
+  //     setLoginLoading(false);
+  //   } catch (err) {
+  //     setError("Invalid email or password. Please try again.");
+  //     setLoginLoading(false);
+  //   }
+  // };
+const handleLogin = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setLoginLoading(true);
+  setError("");
+
+  try {
+    const response = await axiosInstance.post("/login", { email, regNumber });
+
+    if (!response || !response.data) {
+      setError("No response from server.");
       setLoginLoading(false);
-    } catch (err) {
-      setError("Invalid email or password. Please try again.");
-      setLoginLoading(false);
+      return;
     }
-  };
+
+    const { token, student } = response.data;
+
+    if (!token || !student?.regNumber) {
+      setError("Login failed. Missing token or registration number.");
+      setLoginLoading(false);
+      return;
+    }
+
+    localStorage.setItem("token", token);
+    localStorage.setItem("regNumber", student.regNumber);
+
+    router.push("/student");
+  } catch (err: any) {
+    console.error("Login error:", err);
+    if (err.response?.data?.error) {
+      setError(err.response.data.error);
+    } else {
+      setError("Something went wrong. Please try again.");
+    }
+  } finally {
+    setLoginLoading(false);
+  }
+};
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-700 via-green-600 to-indigo-800 p-4">
