@@ -22,7 +22,7 @@ export default function UploadTimetablePage() {
     setMessage("");
 
     try {
-      const res = await fetch("http://localhost:5000/upload-timetable", {
+      const res = await fetch("https://istiqamauni-1.onrender.com/upload-timetable", {
         method: "POST",
         body: formData,
       });

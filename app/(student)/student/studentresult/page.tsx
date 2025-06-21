@@ -112,6 +112,7 @@ const StudentResultsPage = () => {
       const sanitizedRegNumber = regNumber.replace(/[^a-zA-Z0-9]/g, "");
       const res = await fetch(
         `https://istiqamauni-1.onrender.com/student/results/${sanitizedRegNumber}`,
+        // `https://istiqamauni-1.onrender.com/student/results/${sanitizedRegNumber}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

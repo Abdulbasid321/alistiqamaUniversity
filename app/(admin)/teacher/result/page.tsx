@@ -150,6 +150,7 @@ files.forEach((file) => {
   formData.append("regNumber", regNumber); // ✅ backend expects this
 
   try {
+    // const res = await fetch("https://istiqamauni-1.onrender.com/uploadResult", {
     const res = await fetch("https://istiqamauni-1.onrender.com/uploadResult", {
       method: "POST",
       body: formData,
