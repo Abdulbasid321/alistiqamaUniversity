@@ -172,7 +172,12 @@ const StudentResultsPage = () => {
                 </h3>
                 <p className="text-sm text-gray-500 mt-1">
                   Uploaded on:{" "}
-                  {new Date(result.createdAt || result.uploadedAt).toLocaleDateString()}
+                  {(() => {
+  const dateStr = result.createdAt || result.uploadedAt;
+  return dateStr ? new Date(dateStr).toLocaleDateString() : "N/A";
+})()}
+
+
                 </p>
               </div>
               <a
